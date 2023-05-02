@@ -1,0 +1,42 @@
+options:
+    ! : &2[&6System&2]&f
+
+command /워프관리 [<string>] [<string>]:
+    permission: warp.setup
+    trigger:
+        if arg-1 is "생성":
+            if arg-2 is not set:
+                message "{@!} 워프 이름이 지정되지 않았습니다."
+                stop
+            if {erze.warplist::*} contain arg-2:
+                message "{@!} 이미 존재하는 워프명입니다."
+                stop
+            set {erze.warpPoint::%arg-2%} to player's location
+            add arg-2 to {erze.warplist::*}
+            message "{@!} %arg-2%을 생성하였습니다."
+        if arg-1 is "삭제":
+            if arg-2 is not set:
+                message "{@!} 워프 이름이 지정되지 않았습니다."
+                stop
+            if {erze.warplist::*} doesn't contain arg-2:
+                message "{@!} 존재하지 않는 워프명입니다."
+                stop
+            delete {erze.warpPoint::%arg-2%}
+            remove arg-2 from {erze.warplist::*}
+            message "{@!} %arg-2%를 삭제하였습니다."
+            
+        if arg-1 is "목록":
+            message "{@!} 워프 목록"
+            loop {erze.warplist::*}:
+                message "[%loop-value%] -- %{erze.warpPoint::%loop-value%}%"
+
+command /워프 [<string>]:
+    trigger:
+        if arg-1 is not set:
+            message "{@!} 이동할 워프명을 적어주세요"
+            stop
+        if {erze.warplist::*} doesn't contain arg-1:
+            message "{@!} 이동할 수 없거나 존재하지 않는 워프입니다."
+            stop
+        teleport player to {erze.warpPoint::%arg-1%}
+        message "{@!} %arg-1%로 이동하였습니다."
